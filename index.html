@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Please wait…</title>
+
+<style>
+html, body{
+    margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
+    font-family: Arial, sans-serif;
+    background: #f9f9f9; /* White / Premium Theme */
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+
+video{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index:0;
+}
+
+.overlay{
+    position:relative;
+    z-index:1;
+    width:90%;
+    max-width:400px;
+    text-align:center;
+}
+
+#text{
+    font-size:16px;
+    color:#222;
+    margin-bottom:12px;
+    font-weight:bold;
+}
+
+.progress-box{
+    width:100%;
+    height:8px;
+    background:rgba(0,0,0,0.1);
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:12px;
+}
+
+.progress{
+    width:0%;
+    height:100%;
+    background:#4caf50;
+    transition:width 0.1s linear;
+}
+
+select{
+    width:100%;
+    padding:6px 10px;
+    font-size:14px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    background:#fff;
+    color:#222;
+}
+</style>
+
+<script>
+let percent = 0;
+
+// 11 Languages dictionary
+const messages = {
+    en: "Please wait, processing…",
+    ur: "براہِ کرم انتظار کریں، چیک ہو رہا ہے…",
+    hi: "कृपया प्रतीक्षा करें, जांच हो रही है…",
+    es: "Por favor espere, procesando…",
+    fr: "Veuillez patienter, traitement en cours…",
+    de: "Bitte warten, wird verarbeitet…",
+    it: "Attendere prego, elaborazione in corso…",
+    pt: "Aguarde, processando…",
+    ru: "Пожалуйста, подождите, идет обработка…",
+    ja: "お待ちください、処理中…",
+    zh: "请稍候，正在处理…"
+};
+
+function changeLang(l){
+    const t = document.getElementById("text");
+    if(messages[l]) t.innerText = messages[l];
+}
+
+window.onload = function () {
+    const params = new URLSearchParams(window.location.search);
+    const go = params.get("go");
+    const bar = document.querySelector(".progress");
+
+    const timer = setInterval(() => {
+        percent++;
+        bar.style.width = percent + "%";
+        if(percent >= 100){
+            clearInterval(timer);
+            if(go) window.location.href = go;
+        }
+    }, 15); // ~1.5 sec
+};
+</script>
+</head>
+
+<body>
+
+<video autoplay muted playsinline>
+    <!-- Premium white / neutral video background -->
+    <source src="https://cdn.coverr.co/videos/coverr-loading-screen-4693/1080p.mp4" type="video/mp4">
+</video>
+
+<div class="overlay">
+    <div id="text">Please wait, processing…</div>
+    <div class="progress-box"><div class="progress"></div></div>
+    <select onchange="changeLang(this.value)">
+        <option value="en">English</option>
+        <option value="ur">Urdu</option>
+        <option value="hi">Hindi</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="it">Italian</option>
+        <option value="pt">Portuguese</option>
+        <option value="ru">Russian</option>
+        <option value="ja">Japanese</option>
+        <option value="zh">Chinese</option>
+    </select>
+</div>
+
+</body>
+</html>
